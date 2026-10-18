@@ -28,9 +28,10 @@ public class BankAccountService {
     }
 
     public BankAccount findAccountByOwner(String owner) {
-        if (owner == null) {return null;}
         for (BankAccount account : this.bankAccountList) {
-            if (account.getOwner().equals(owner)) {
+            if (account.getOwner() == null) {
+                continue;
+            } else if (account.getOwner().equals(owner)) {
                 return account;
             }
         }
