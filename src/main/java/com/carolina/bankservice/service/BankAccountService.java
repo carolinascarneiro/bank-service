@@ -4,11 +4,13 @@ import com.carolina.bankservice.model.BankAccount;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class BankAccountService {
 
-    private List<BankAccount> bankAccountList = new ArrayList<>();
+    public BankAccountService() {
+    }
+
+    private final List<BankAccount> bankAccountList = new ArrayList<>();
 
     public boolean addAccount(BankAccount account) {
         if (account == null) {
@@ -26,6 +28,7 @@ public class BankAccountService {
     }
 
     public BankAccount findAccountByOwner(String owner) {
+        if (owner == null) {return null;}
         for (BankAccount account : this.bankAccountList) {
             if (account.getOwner().equals(owner)) {
                 return account;

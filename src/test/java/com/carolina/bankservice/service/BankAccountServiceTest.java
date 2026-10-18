@@ -1,41 +1,46 @@
 package com.carolina.bankservice.service;
 
 import com.carolina.bankservice.model.BankAccount;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class BankAccountServiceTest {
 
+    private BankAccountService bankAccountService;
+
+    @BeforeEach
+    void init() {
+        bankAccountService = new BankAccountService();
+    }
+
     @Test
     void shouldAddAccountSuccessfully() {
-        BankAccountService service = new BankAccountService();
         BankAccount anna = new BankAccount("Anna", 100.0);
-
-        boolean result = service.addAccount(anna);
+        boolean result = bankAccountService.addAccount(anna);
 
         assertTrue(result);
     }
 
     @Test
     void shouldRejectSameAccountInstance() {
-        BankAccountService service = new BankAccountService();
         BankAccount anna = new BankAccount("Anna", 100.0);
 
-        service.addAccount(anna);
-        boolean result = service.addAccount(anna);
+        bankAccountService.addAccount(anna);
+        boolean result = bankAccountService.addAccount(anna);
         assertFalse(result);
     }
 
     @Test
     void shouldAllowTwoDifferentAccountsWithSameOwner() {
-        BankAccountService service = new BankAccountService();
         BankAccount anna1 = new BankAccount("Anna", 100.0);
         BankAccount anna2 = new BankAccount("Anna", 200.0);
 
-        boolean result = service.addAccount(anna1);
-        boolean result2 = service.addAccount(anna2);
-        boolean result3 = service.addAccount(anna1);
+        boolean result = bankAccountService.addAccount(anna1);
+        boolean result2 = bankAccountService.addAccount(anna2);
+        boolean result3 = bankAccountService.addAccount(anna1);
 
         assertTrue(result);
         assertTrue(result2);
@@ -46,7 +51,6 @@ class BankAccountServiceTest {
     void getsAccountWithRightOwnerWhenOwnerGiven() {
         BankAccount anna = new BankAccount("Anna", 50.0);
         BankAccount max = new BankAccount("Max", 100.0);
-        BankAccountService bankAccountService = new BankAccountService();
 
         bankAccountService.addAccount(anna);
         bankAccountService.addAccount(max);
@@ -61,8 +65,6 @@ class BankAccountServiceTest {
     void getsNullWhenOwnerFalseCaseGiven() {
         BankAccount anna = new BankAccount("Anna", 50.0);
         BankAccount max = new BankAccount("Max", 100.0);
-        BankAccountService bankAccountService = new BankAccountService();
-
         bankAccountService.addAccount(anna);
         bankAccountService.addAccount(max);
 
@@ -70,6 +72,40 @@ class BankAccountServiceTest {
         assertNull(result);
     }
 
+    @Test
+    void verifyIfInstanceIsTheSameWhenFindAccountByOwner() {
+        BankAccount max = new BankAccount("Max", 100.0);
+        bankAccountService.addAccount(max);
+        BankAccount result = bankAccountService.findAccountByOwner("Max");
+        //assertEquals(result, max);
+        Assertions.assertSame(max, result);
+    }
+
+    @Test
+    void getsNullWhenLooksForAccountOfUnregisteredUser() {
+        BankAccount anna = new BankAccount("Anna", 50.0);
+        bankAccountService.addAccount(anna);
+        BankAccount result = bankAccountService.findAccountByOwner("Julia");
+        assertNull(result);
+    }
+
+    @Test
+    void returnsFirstInstanceWhenTwoAccountsWithSameOwner() {
+        BankAccount anna1 = new BankAccount("Anna", 100.0);
+        BankAccount anna2 = new BankAccount("Anna", 200.0);
+        bankAccountService.addAccount(anna1);
+        bankAccountService.addAccount(anna2);
+        BankAccount result = bankAccountService.findAccountByOwner("Anna");
+        Assertions.assertSame(anna1, result);
+    }
+
+    @Test
+    void shouldReturnNullWhenOwnerIsNull() {
+        BankAccount anna = new BankAccount("Anna", 100.0);
+        bankAccountService.addAccount(anna);
+        BankAccount result = bankAccountService.findAccountByOwner(null);
+        Assertions.assertNull(result);
+    }
 
 }
 
