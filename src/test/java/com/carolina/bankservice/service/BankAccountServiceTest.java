@@ -118,6 +118,5 @@ class BankAccountServiceTest {
         BankAccount result = bankAccountService.findAccountByOwner("Anna");
         assertSame(anna, result);
     }
-
 }
 
