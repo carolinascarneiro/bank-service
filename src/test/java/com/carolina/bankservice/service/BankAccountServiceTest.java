@@ -107,5 +107,17 @@ class BankAccountServiceTest {
         Assertions.assertNull(result);
     }
 
+    @Test
+    void shouldReturnCorrectInstanceIfFindsIncompleteOwnerData() {
+        BankAccount mysterious = new BankAccount(null, 100.0);
+        BankAccount anna = new BankAccount("Anna", 200.0);
+
+        bankAccountService.addAccount(mysterious);
+        bankAccountService.addAccount(anna);
+
+        BankAccount result = bankAccountService.findAccountByOwner("Anna");
+        assertSame(anna, result);
+    }
+
 }
 
